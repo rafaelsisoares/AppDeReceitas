@@ -1,10 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import AppContext from './AppContext';
+import useRecipes from '../hooks/useRecipes';
 
 function AppProvider({ children }) {
+  const value = useRecipes();
+  console.log(value);
+
   return (
-    <AppContext.Provider value={ false }>
+    <AppContext.Provider value={ value }>
       { children }
     </AppContext.Provider>
   );

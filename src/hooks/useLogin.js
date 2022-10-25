@@ -30,7 +30,6 @@ const useLogin = () => {
   }, [loginData]);
 
   const handleLoginSubmit = () => {
-    console.warn('submitted');
     const { email } = loginData;
     const user = {
       email,
