@@ -33,7 +33,7 @@ describe('Valida tela de Login', () => {
     const meals = screen.getByTestId('meals-bottom-btn');
 
     expect(style.position).toBe('fixed');
-    expect(drinks).toHaveAttribute('src', '../src/images/drinkIcon.svg')
-    expect(meals).toHaveAttribute('src', '../src/images/mealIcon.svg')
+    expect(drinks).toHaveAttribute('src', '../src/images/drinkIcon.svg');
+    expect(meals).toHaveAttribute('src', '../src/images/mealIcon.svg');
   });
 });
