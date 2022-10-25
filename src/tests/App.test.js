@@ -24,4 +24,16 @@ describe('Valida tela de Login', () => {
       return expect(pathname).toBe('/meals');
     }, { timeout: 4000 });
   });
+
+  it('Verifica funcionalidades do footer', () => {
+    render(<App />);
+    const footer = screen.getByTestId('footer');
+    const style = window.getComputedStyle(footer);
+    const drinks = screen.getByTestId('drinks-bottom-btn');
+    const meals = screen.getByTestId('meals-bottom-btn');
+
+    expect(style.position).toBe('fixed');
+    expect(drinks).toHaveAttribute('src', '../src/images/drinkIcon.svg')
+    expect(meals).toHaveAttribute('src', '../src/images/mealIcon.svg')
+  });
 });
