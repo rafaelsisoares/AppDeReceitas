@@ -51,6 +51,7 @@ describe('Valida tela de Login', () => {
       const { location: { pathname } } = history;
       return expect(pathname).toBe('/profile');
     }, { timeout: 4000 });
+  });
 
   it('Verifica funcionalidades do footer', () => {
     render(<App />);

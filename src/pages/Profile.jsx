@@ -14,7 +14,7 @@ export default function Profile() {
   return (
     <div>
       <Header haveHeaderSearchBtn={ !haveHeaderSearchBtn } />
-       <Footer />
+      <Footer />
     </div>
   );
 }
