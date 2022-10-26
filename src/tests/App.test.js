@@ -1,6 +1,6 @@
 import React from 'react';
 import userEvent from '@testing-library/user-event';
-import { screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import renderWithRouter from '../helpers';
 
 import App from '../App';
@@ -63,45 +63,5 @@ describe('Valida tela de Login', () => {
     expect(style.position).toBe('fixed');
     expect(drinks).toHaveAttribute('src', '../src/images/drinkIcon.svg');
     expect(meals).toHaveAttribute('src', '../src/images/mealIcon.svg');
-  });
-});
-
-describe('Valida a tela de perfil', () => {
-  it('Verifica se os itens foram renderizados', () => {
-    const email = 'email@email.com';
-    const password = '1234567890';
-    renderWithRouter(<App />);
-
-    const emailInput = screen.getByTestId('email-input');
-    const passwordInput = screen.getByTestId('password-input');
-    const btnLogin = screen.getByTestId('login-submit-btn');
-
-    userEvent.type(emailInput, email);
-    userEvent.type(passwordInput, password);
-    userEvent.click(btnLogin);
-
-    const profile = screen.getByTestId('profile-top-btn');
-    userEvent.click(profile);
-
-    const profileEmail = screen.getByTestId('profile-email');
-    const btnDoneRecipes = screen.getByTestId('profile-done-btn');
-    const btnFavoriteRecipes = screen.getByTestId('profile-favorite-btn');
-    const btnLogout = screen.getByTestId('profile-logout-btn');
-
-    expect(profileEmail).toBeInTheDocument();
-    expect(btnDoneRecipes).toBeInTheDocument();
-    expect(btnFavoriteRecipes).toBeInTheDocument();
-    expect(btnLogout).toBeInTheDocument();
-  });
-
-  it('Verifica as funcionalidades', async () => {
-    const { history } = renderWithRouter(<App />);
-
-    history.push('/profile');
-
-    const btnDoneRecipes = screen.getByTestId('profile-done-btn');
-    userEvent.click(btnDoneRecipes);
-
-    expect(screen.getByText(/done recipes/i)).toBeInTheDocument();
   });
 });
