@@ -9,9 +9,11 @@ export default function Login() {
     handleLoginSubmit,
     handleOnInputChange,
     validInputs } = useLogin();
+
   const { isValidInputs } = validInputs;
 
   if (redirect !== '') return <Redirect to={ redirect } />;
+
   return (
     <form action="" className="login-form">
       <label htmlFor="email">

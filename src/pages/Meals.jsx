@@ -1,11 +1,19 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
+import Header from '../components/Header';
 
 import Footer from '../components/Footer';
 
 export default function Meals() {
+  const { pathname } = useLocation();
+
+  const haveHeaderSearchBtn = pathname === '/profile'
+  || pathname === '/done-recipes'
+  || pathname === '/favorite-recipes';
+
   return (
     <div>
-      <h1>wwwwwwww</h1>
+      <Header haveHeaderSearchBtn={ !haveHeaderSearchBtn } />
       <Footer />
     </div>
   );
