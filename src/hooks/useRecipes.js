@@ -33,7 +33,13 @@ const useRecipes = () => {
     const { searchOpt, searchFilter, searchValue, apiAddres } = treatEndpoint(category);
     const endpoint = `https://www.${apiAddres}.com/api/json/v1/1/${searchOpt}.php?${searchFilter}=${searchValue}`;
     const data = await (await fetch(endpoint)).json();
+    console.log(endpoint);
     const currTarget = apiAddres === 'thecocktaildb' ? 'drinks' : 'meals';
+
+    if (!data[currTarget]) {
+      return global.alert('Sorry, we haven\'t found any recipes for these filters.');
+    }
+
     setRecipesData({
       ...recipesData,
       [currTarget]: data[currTarget],

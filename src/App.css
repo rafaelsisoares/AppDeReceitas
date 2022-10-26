@@ -72,3 +72,24 @@ footer {
   left: 0;
   position: fixed;
 }
+
+.recipe-card {
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80vw;
+  max-width: 80vw;
+  margin: 1rem auto;
+  padding: 2rem 1rem;
+  background-color: rgb(251, 247, 247);
+}
+
+.recipe-title {
+  font-size: 1rem;
+  margin: 1rem;
+}
+.recipe-card-img {
+  width: 70%;
+  border-radius: 16%;
+}
