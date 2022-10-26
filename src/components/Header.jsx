@@ -37,7 +37,7 @@ export default function Header(props) {
           <img
             data-testid="search-top-btn"
             src={ searchIcon }
-            alt=""
+            alt="search"
           />
         </button>)}
 

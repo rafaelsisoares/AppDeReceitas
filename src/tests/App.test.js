@@ -1,6 +1,6 @@
 import React from 'react';
 import userEvent from '@testing-library/user-event';
-import { screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import renderWithRouter from '../helpers';
 
 import App from '../App';
@@ -36,6 +36,23 @@ describe('Valida tela de Login', () => {
     expect(profile).toBeInTheDocument();
     expect(search).toBeInTheDocument();
 
+    expect(title).toBeInTheDocument();
+    userEvent.click(profile);
+    await waitFor(() => {
+      const { location: { pathname } } = history;
+      return expect(pathname).toBe('/profile');
+    }, { timeout: 4000 });
+  });
+
+  it('Verifica funcionalidades do clique no botão de pesquisa', () => {
+    render(<App />);
+    const profile = screen.getByTestId('profile-top-btn');
+    const search = screen.getByTestId('search-top-btn');
+    const title = screen.getByTestId('page-title');
+
+    expect(profile).toBeInTheDocument();
+    expect(search).toBeInTheDocument();
+
     userEvent.click(search);
 
     const searchInput = screen.getByTestId('search-input');
@@ -43,14 +60,9 @@ describe('Valida tela de Login', () => {
 
     userEvent.click(search);
 
-    expect(screen.getByTestId('search-input')).not.toBeInTheDocument();
+    expect(searchInput).not.toBeInTheDocument();
 
     expect(title).toBeInTheDocument();
-    userEvent.click(profile);
-    await waitFor(() => {
-      const { location: { pathname } } = history;
-      return expect(pathname).toBe('/profile');
-    }, { timeout: 4000 });
   });
 
   it('Verifica funcionalidades do footer', () => {
@@ -63,5 +75,19 @@ describe('Valida tela de Login', () => {
     expect(style.position).toBe('fixed');
     expect(drinks).toHaveAttribute('src', '../src/images/drinkIcon.svg');
     expect(meals).toHaveAttribute('src', '../src/images/mealIcon.svg');
+  });
+
+  it('Verifica funcionalidades da barra de pesquisa', () => {
+    global.alert = jest.fn();
+    renderWithRouter(<App />, { initialEntries: ['/meals'] });
+
+    const search = screen.getByRole('img', { name: /search/i });
+    expect(search).toBeInTheDocument();
+    userEvent.click(search);
+
+    const fetchBtn = screen.getByTestId('exec-search-btn');
+    userEvent.click(fetchBtn);
+
+    expect(global.alert).toHaveBeenCalledTimes(3);
   });
 });
