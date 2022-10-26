@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import AppContext from './AppContext';
-import useRecipes from '../hooks/useRecipes';
+import useRecipesContext from '../hooks/useRecipesContext';
 
 function AppProvider({ children }) {
-  const value = useRecipes();
-  console.log(value);
+  const contentValue = useRecipesContext();
 
   return (
-    <AppContext.Provider value={ value }>
+    <AppContext.Provider value={ contentValue }>
       { children }
     </AppContext.Provider>
   );
