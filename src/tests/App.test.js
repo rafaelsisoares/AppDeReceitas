@@ -7,8 +7,6 @@ import App from '../App';
 import Header from '../components/Header';
 
 describe('Valida tela de Login', () => {
-  const search = screen.getByTestId('search-top-btn');
-
   it('Verifica se os inputs name e email existem na página', async () => {
     const { history } = renderWithRouter(<App />);
     const email = screen.getByTestId('email-input');
@@ -32,6 +30,7 @@ describe('Valida tela de Login', () => {
     const { history } = renderWithRouter(<Header />);
 
     const profile = screen.getByTestId('profile-top-btn');
+    const search = screen.getByTestId('search-top-btn');
     const title = screen.getByTestId('page-title');
 
     expect(profile).toBeInTheDocument();
@@ -48,6 +47,7 @@ describe('Valida tela de Login', () => {
   it('Verifica funcionalidades do clique no botão de pesquisa', () => {
     render(<App />);
     const profile = screen.getByTestId('profile-top-btn');
+    const search = screen.getByTestId('search-top-btn');
     const title = screen.getByTestId('page-title');
 
     expect(profile).toBeInTheDocument();
@@ -79,8 +79,9 @@ describe('Valida tela de Login', () => {
 
   it('Verifica funcionalidades da barra de pesquisa', () => {
     global.alert = jest.fn();
-    renderWithRouter(<App />);
+    renderWithRouter(<App />, { initialEntries: ['/meals'] });
 
+    const search = screen.getByRole('img', { name: /search/i });
     expect(search).toBeInTheDocument();
     userEvent.click(search);
 
