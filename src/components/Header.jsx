@@ -14,6 +14,7 @@ export default function Header(props) {
   let treatTitle = `${title[0].toUpperCase()}${title.slice(1)}`;
   treatTitle = treatTitle.replace('-', ' ').split(' ');
   treatTitle = treatTitle.map((word) => word[0].toUpperCase() + word.slice(1)).join(' ');
+  console.log(treatTitle);
 
   const { haveHeaderSearchBtn } = props;
   return (
