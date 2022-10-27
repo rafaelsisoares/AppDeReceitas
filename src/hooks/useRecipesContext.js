@@ -41,7 +41,9 @@ const useRecipesContext = () => {
     };
     setData();
   }, []);
-  return contentValue;
+  return {
+    contentValue,
+    reqApi };
 };
 
 export default useRecipesContext;

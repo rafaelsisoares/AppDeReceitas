@@ -60,10 +60,22 @@ const useRecipes = () => {
     });
   };
 
+  const handleFilterByCategory = async (category, value) => {
+    const currTarget = category === 'thecocktaildb' ? 'drinks' : 'meals';
+    const filterByCategoryURL = `https://www.${category}.com/api/json/v1/1/filter.php?c=${value}`;
+    const data = await (await fetch(filterByCategoryURL)).json();
+    setRecipesData({
+      ...recipesData,
+      [currTarget]: data[currTarget],
+    });
+  };
+
   return {
     handleInputSearch,
     handleOnInputChange,
-    searchRequest };
+    searchRequest,
+    handleFilterByCategory,
+  };
 };
 
 export default useRecipes;
