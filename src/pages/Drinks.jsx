@@ -6,7 +6,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 export default function Drinks() {
-  const { recipesData: { drinks } } = useContext(AppContext);
+  const { recipesData: { drinks, drinksCategories } } = useContext(AppContext);
 
   const { pathname } = useLocation();
 
@@ -25,6 +25,21 @@ export default function Drinks() {
     <div>
       {haveHeader && <Header haveHeaderSearchBtn={ !haveHeaderSearchBtn } />}
 
+      { drinksCategories && drinksCategories.map((category, index) => {
+        const categoryLimit = 5;
+        if (index < categoryLimit) {
+          return (
+            <button
+              key={ category.strCategory }
+              type="button"
+              data-testid={ `${category.strCategory}-category-filter` }
+            >
+              {category.strCategory}
+            </button>
+          );
+        }
+        return null;
+      })}
       <Recipes recipes={ drinks } />
 
       <Footer />

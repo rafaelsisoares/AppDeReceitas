@@ -6,7 +6,7 @@ import Footer from '../components/Footer';
 import Recipes from '../components/Recipes';
 
 export default function Meals() {
-  const { recipesData: { meals } } = useContext(AppContext);
+  const { recipesData: { meals, mealsCategories } } = useContext(AppContext);
 
   const { pathname } = useLocation();
 
@@ -24,7 +24,23 @@ export default function Meals() {
   return (
     <div>
       {haveHeader && <Header haveHeaderSearchBtn={ !haveHeaderSearchBtn } />}
-
+      <div className="category-filters">
+        { mealsCategories && mealsCategories.map((category, index) => {
+          const categoryLimit = 5;
+          if (index < categoryLimit) {
+            return (
+              <button
+                key={ category.strCategory }
+                type="button"
+                data-testid={ `${category.strCategory}-category-filter` }
+              >
+                {category.strCategory}
+              </button>
+            );
+          }
+          return null;
+        })}
+      </div>
       <Recipes recipes={ meals } />
 
       <Footer />
