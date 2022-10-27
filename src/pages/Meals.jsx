@@ -43,9 +43,20 @@ export default function Meals() {
               <button
                 key={ category.strCategory }
                 type="button"
-                onClick={ () => {
-                  toggleFiltered(true);
+                onClick={ async () => {
+                  if (isFiltered) {
+                    const { data } = await reqApi('themealdb');
+                    if (data) {
+                      toggleFiltered(false);
+                      return setRecipesData({
+                        ...recipesData,
+                        meals: data.meals,
+                      });
+                    }
+                  }
+
                   handleFilterByCategory('themealdb', category.strCategory);
+                  toggleFiltered(true);
                 } }
                 data-testid={ `${category.strCategory}-category-filter` }
               >

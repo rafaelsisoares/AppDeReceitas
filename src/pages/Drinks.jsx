@@ -43,9 +43,20 @@ export default function Drinks() {
             <button
               key={ category.strCategory }
               type="button"
-              onClick={ () => {
-                toggleFiltered(true);
+              onClick={ async () => {
+                if (isFiltered) {
+                  const { data } = await reqApi('thecocktaildb');
+                  if (data) {
+                    toggleFiltered(false);
+                    return setRecipesData({
+                      ...recipesData,
+                      drinks: data.drinks,
+                    });
+                  }
+                }
+
                 handleFilterByCategory('thecocktaildb', category.strCategory);
+                toggleFiltered(true);
               } }
               data-testid={ `${category.strCategory}-category-filter` }
             >
