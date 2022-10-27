@@ -1,25 +1,17 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useLocation, Redirect } from 'react-router-dom';
 import Header from '../components/Header';
 import AppContext from '../context/AppContext';
 import useRecipes from '../hooks/useRecipes';
 import Footer from '../components/Footer';
 import Recipes from '../components/Recipes';
-import useRecipesContext from '../hooks/useRecipesContext';
 
 export default function Meals() {
-  const {
-    recipesData, recipesData: { meals, mealsCategories },
-    setRecipesData,
-  } = useContext(AppContext);
+  const { recipesData: { meals, mealsCategories } } = useContext(AppContext);
 
-  const [isFiltered, toggleFiltered] = useState(false);
-
-  const { handleFilterByCategory } = useRecipes();
+  const { handleFilter, handleRemoveFilter, isFiltered } = useRecipes();
 
   const { pathname } = useLocation();
-
-  const { reqApi } = useRecipesContext();
 
   const haveHeaderSearchBtn = pathname === '/profile'
   || pathname === '/done-recipes'
@@ -41,24 +33,12 @@ export default function Meals() {
           if (index < categoryLimit) {
             return (
               <button
-                key={ category.strCategory }
-                type="button"
-                onClick={ async () => {
-                  if (isFiltered) {
-                    const { data } = await reqApi('themealdb');
-                    if (data) {
-                      toggleFiltered(false);
-                      return setRecipesData({
-                        ...recipesData,
-                        meals: data.meals,
-                      });
-                    }
-                  }
-
-                  handleFilterByCategory('themealdb', category.strCategory);
-                  toggleFiltered(true);
-                } }
                 data-testid={ `${category.strCategory}-category-filter` }
+                key={ category.strCategory }
+                value="themealdb"
+                name={ category.strCategory }
+                type="button"
+                onClick={ handleFilter }
               >
                 {category.strCategory}
               </button>
@@ -69,15 +49,8 @@ export default function Meals() {
         <button
           type="button"
           data-testid="All-category-filter"
-          onClick={ async () => {
-            toggleFiltered(false);
-            const { data } = await reqApi('themealdb');
-            if (data) {
-              setRecipesData({
-                ...recipesData,
-                meals: data.meals,
-              });
-            }
+          onClick={ () => {
+            handleRemoveFilter('themealdb');
           } }
         >
           All

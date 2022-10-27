@@ -1,14 +1,16 @@
 import { useState, useContext } from 'react';
+import useRecipesContext from './useRecipesContext';
 import AppContext from '../context/AppContext';
 
 const useRecipes = () => {
   console.log(useContext(AppContext));
   const { recipesData, setRecipesData } = useContext(AppContext);
 
-  const SEARCH_INITIAL_STATE = {
-    searchBy: '',
-    searchValue: '',
-  };
+  const SEARCH_INITIAL_STATE = { searchBy: '', searchValue: '' };
+
+  const { reqApi } = useRecipesContext();
+
+  const [isFiltered, toggleFiltered] = useState('');
 
   const [searchOptions, setSearchOptions] = useState(SEARCH_INITIAL_STATE);
 
@@ -70,11 +72,32 @@ const useRecipes = () => {
     });
   };
 
+  const handleRemoveFilter = async (category) => {
+    const { data } = await reqApi(category);
+    const currDataTarget = category === 'themealdb' ? 'meals' : 'drinks';
+    if (data) {
+      toggleFiltered('');
+      return setRecipesData({
+        ...recipesData,
+        [currDataTarget]: data[currDataTarget],
+      });
+    }
+  };
+
+  const handleFilter = async ({ target: { name, value } }) => {
+    if (isFiltered === name) return handleRemoveFilter(value);
+    handleFilterByCategory(value, name);
+    toggleFiltered(name);
+  };
+
   return {
     handleInputSearch,
     handleOnInputChange,
     searchRequest,
     handleFilterByCategory,
+    handleFilter,
+    handleRemoveFilter,
+    isFiltered,
   };
 };
 

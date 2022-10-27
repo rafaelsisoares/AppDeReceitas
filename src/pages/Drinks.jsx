@@ -1,23 +1,15 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useLocation, Redirect } from 'react-router-dom';
 import AppContext from '../context/AppContext';
 import Recipes from '../components/Recipes';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import useRecipes from '../hooks/useRecipes';
-import useRecipesContext from '../hooks/useRecipesContext';
 
 export default function Drinks() {
-  const {
-    recipesData, recipesData: { drinks, drinksCategories },
-    setRecipesData,
-  } = useContext(AppContext);
+  const { recipesData: { drinks, drinksCategories } } = useContext(AppContext);
 
-  const { handleFilterByCategory } = useRecipes();
-
-  const [isFiltered, toggleFiltered] = useState(false);
-
-  const { reqApi } = useRecipesContext();
+  const { handleFilter, handleRemoveFilter, isFiltered } = useRecipes();
 
   const { pathname } = useLocation();
 
@@ -43,21 +35,9 @@ export default function Drinks() {
             <button
               key={ category.strCategory }
               type="button"
-              onClick={ async () => {
-                if (isFiltered) {
-                  const { data } = await reqApi('thecocktaildb');
-                  if (data) {
-                    toggleFiltered(false);
-                    return setRecipesData({
-                      ...recipesData,
-                      drinks: data.drinks,
-                    });
-                  }
-                }
-
-                handleFilterByCategory('thecocktaildb', category.strCategory);
-                toggleFiltered(true);
-              } }
+              value="thecocktaildb"
+              name={ category.strCategory }
+              onClick={ handleFilter }
               data-testid={ `${category.strCategory}-category-filter` }
             >
               {category.strCategory}
@@ -69,15 +49,8 @@ export default function Drinks() {
       <button
         type="button"
         data-testid="All-category-filter"
-        onClick={ async () => {
-          toggleFiltered(false);
-          const { data } = await reqApi('thecocktaildb');
-          if (data) {
-            setRecipesData({
-              ...recipesData,
-              drinks: data.drinks,
-            });
-          }
+        onClick={ () => {
+          handleRemoveFilter('thecocktaildb');
         } }
       >
         All
