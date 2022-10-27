@@ -1,9 +1,13 @@
-import React from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { useLocation, Redirect } from 'react-router-dom';
+import AppContext from '../context/AppContext';
+import Recipes from '../components/Recipes';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 export default function Drinks() {
+  const { recipesData: { drinks } } = useContext(AppContext);
+
   const { pathname } = useLocation();
 
   const haveHeaderSearchBtn = pathname === '/profile'
@@ -11,10 +15,18 @@ export default function Drinks() {
   || pathname === '/favorite-recipes';
 
   const haveHeader = !(pathname.includes(':id'));
-  console.log(haveHeader);
+
+  if (drinks.length === 1) {
+    const currRecipeId = drinks[0].idDrink;
+    return <Redirect to={ `/drinks/${currRecipeId}` } />;
+  }
+
   return (
     <div>
       {haveHeader && <Header haveHeaderSearchBtn={ !haveHeaderSearchBtn } />}
+
+      <Recipes recipes={ drinks } />
+
       <Footer />
     </div>
   );
