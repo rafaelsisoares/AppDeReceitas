@@ -25,7 +25,7 @@ export default function Profile() {
     <div>
       <Header haveHeaderSearchBtn={ !haveHeaderSearchBtn } />
       <div>
-        <p data-testid="profile-email">{email}</p>
+        <p data-testid="profile-email">{!email ? null : email}</p>
         <button
           type="button"
           onClick={ () => { setRedirect('/done-recipes'); } }
