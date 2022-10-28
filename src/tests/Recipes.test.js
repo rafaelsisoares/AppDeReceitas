@@ -22,4 +22,8 @@ it('Verifica o botão de Drinks', async () => {
   expect(drink).toHaveTextContent('Cocktail');
   const drinksList = await screen.findAllByTestId(/card-name/i);
   expect(drinksList).toHaveLength(12);
+
+  const allBtn = screen.getByRole('button', { name: /all/i });
+  expect(allBtn).toBeInTheDocument();
+  userEvent.click(allBtn);
 });
