@@ -13,24 +13,37 @@ const useRecipesContext = () => {
 
   const reqApi = async (category) => {
     const URL = `https://www.${category}.com/api/json/v1/1/search.php?s=`;
+    const categorysURL = `https://www.${category}.com/api/json/v1/1/list.php?c=list`;
+    const categories = await (await fetch(categorysURL)).json();
     const data = await (await fetch(URL)).json();
-    return data;
+    return { data, categories };
   };
 
   useEffect(() => {
     const setData = async () => {
-      const meals = await reqApi('themealdb');
-      const drinks = await reqApi('thecocktaildb');
+      const { data: meals,
+        categories: mealsCategories,
+      } = await reqApi('themealdb');
+
+      const {
+        data: drinks,
+        categories: drinksCategories,
+      } = await reqApi('thecocktaildb');
+
       console.log(meals);
       console.log(drinks);
       setRecipesData({
         meals: meals.meals,
+        mealsCategories: mealsCategories.meals,
         drinks: drinks.drinks,
+        drinksCategories: drinksCategories.drinks,
       });
     };
     setData();
   }, []);
-  return contentValue;
+  return {
+    contentValue,
+    reqApi };
 };
 
 export default useRecipesContext;

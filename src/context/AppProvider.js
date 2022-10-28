@@ -4,7 +4,7 @@ import AppContext from './AppContext';
 import useRecipesContext from '../hooks/useRecipesContext';
 
 function AppProvider({ children }) {
-  const contentValue = useRecipesContext();
+  const { contentValue } = useRecipesContext();
 
   return (
     <AppContext.Provider value={ contentValue }>
