@@ -37,8 +37,35 @@ describe('Valida a tela de perfil', () => {
     expect(btnDoneRecipes).toBeInTheDocument();
     expect(btnFavoriteRecipes).toBeInTheDocument();
     expect(btnLogout).toBeInTheDocument();
+    expect(btnMeals).toBeInTheDocument();
     expect(searchBtn).not.toBeInTheDocument();
   });
+
+  // it('Verifica o botão de Drinks', async () => {
+  //   const { history } = renderWithRouter(<App />);
+
+  //   userEvent.type(screen.getByTestId('email-input'), 'email@email.com');
+  //   userEvent.type(screen.getByTestId('password-input'), '1234567890');
+  //   userEvent.click(screen.getByTestId('login-submit-btn'));
+
+  //   const btnDrinks = screen.getByAltText('Drink');
+  //   expect(btnDrinks).toBeInTheDocument();
+  //   userEvent.click(btnDrinks);
+
+  //   const { location: { pathname } } = history;
+  //   waitFor(() => expect(pathname).toBe('/drinks'));
+  // });
+
+  // it('Verifica o botão de Meals', async () => {
+  //   const { history } = renderWithRouter(<App />);
+
+  //   const btnMeals = screen.getByAltText('Meal');
+  //   expect(btnMeals).toBeInTheDocument();
+  //   userEvent.click(btnMeals);
+
+  //   const { location: { pathname } } = history;
+  //   expect(pathname).toBe('/drinks');
+  // });
 
   it('Verifica o botão done recipes', async () => {
     const { history } = renderWithRouter(<App />);
