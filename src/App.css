@@ -95,3 +95,13 @@ footer {
   width: 70%;
 }
 
+.recipe-detail-thumb {
+  display: flex;
+  margin: 1rem auto;
+  max-width: 60%;
+}
+
+iframe {
+  display: flex;
+  margin: auto;
+}
