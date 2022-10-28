@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import RecomendationCard from '../components/RecomendationCard';
 
 export default function RecipeDetail() {
   const { pathname } = useLocation();
@@ -96,6 +97,10 @@ export default function RecipeDetail() {
           allowFullScreen
           title="Embedded youtube"
         />}
+
+        <div>
+          <RecomendationCard />
+        </div>
       </div>
     );
   }

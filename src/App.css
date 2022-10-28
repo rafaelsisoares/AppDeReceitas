@@ -105,3 +105,26 @@ iframe {
   display: flex;
   margin: auto;
 }
+
+.recommendations-container {
+  background-color: rgb(233, 233, 250);
+  border-radius: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem auto;
+  max-height: 5.5rem;
+  max-width: 80%;
+  overflow: hidden;
+  overflow-x: scroll;
+  padding: 0.5rem;
+}
+
+.recommendation-card {
+  background-color: rgb(248, 244, 244);
+  border-radius: 0.5rem;
+  display: flex;
+  justify-content: center;
+  max-height: 1.5rem;
+  min-width: 49%;
+  text-align: center;
+}
