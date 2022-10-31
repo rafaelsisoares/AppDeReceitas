@@ -98,6 +98,13 @@ export default function RecipeDetail() {
           title="Embedded youtube"
         />}
 
+        <button
+          type="button"
+          data-testid="start-recipe-btn"
+          className="btn-start-recipe"
+        >
+          Start Recipe
+        </button>
         <div>
           <RecomendationCard />
         </div>

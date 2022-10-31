@@ -128,3 +128,8 @@ iframe {
   min-width: 49%;
   text-align: center;
 }
+
+.btn-start-recipe {
+  bottom: 0;
+  position: fixed;
+}
