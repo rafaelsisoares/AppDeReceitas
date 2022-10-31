@@ -15,6 +15,34 @@ export default function RecipeDetail() {
   const category = pathname.includes('drinks') ? 'thecocktaildb' : 'themealdb';
   const id = pathname.split('/')[2];
 
+  const [isDisabled, setIsDisabled] = useState(false);
+
+  const doneRecipeExemplo = [{
+    id: '52771',
+    type: 'meal',
+    nationality: 'Italian',
+    category: 'Vegetarian',
+    alcoholicOrNot: '',
+    name: 'Spicy Arrabiata Penne',
+    image: 'https://www.themealdb.com/images/media/meals/ustsqw1468250014.jpg',
+    doneDate: '',
+    tags: ['Pasta', 'Curry'],
+  }];
+  localStorage.setItem('doneRecipes', JSON.stringify(doneRecipeExemplo));
+
+  useEffect(() => {
+    const teste = JSON.parse(localStorage.getItem('doneRecipes'));
+    const isRecipeDone = () => {
+      console.log('antes do if');
+      if (teste.length > 0) {
+        setIsDisabled(true);
+        console.log('depois do if');
+      }
+      console.log('retorno');
+    };
+    isRecipeDone();
+  }, []);
+
   useEffect(() => {
     const getIngredients = (data) => {
       const ingredients = [];
@@ -97,17 +125,19 @@ export default function RecipeDetail() {
           allowFullScreen
           title="Embedded youtube"
         />}
-
         <button
           type="button"
           data-testid="start-recipe-btn"
           className="btn-start-recipe"
+          disabled={ isDisabled }
         >
           Start Recipe
         </button>
+
         <div>
           <RecomendationCard />
         </div>
+
       </div>
     );
   }
