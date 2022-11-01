@@ -16,6 +16,7 @@ export default function RecipeDetail() {
   const id = pathname.split('/')[2];
 
   const [isDisabled, setIsDisabled] = useState(false);
+  const [inProgress, setInProgress] = useState(false);
 
   const doneRecipeExemplo = [{
     id: '52771',
@@ -82,6 +83,27 @@ export default function RecipeDetail() {
     getRecipeDetail();
   }, [category, id, isDrinkCateogry]);
 
+  useEffect(() => {
+    const isRecipeInProgress = () => {
+      const { data } = currRecipeData;
+      const recipesInProgress = JSON.parse(localStorage.getItem('inProgressRecipes'));
+      const recipeType = isDrinkCateogry ? 'drinks' : 'meals';
+      const idType = isDrinkCateogry ? 'idDrink' : 'idMeal';
+      const recipeTarget = data[recipeType];
+      if (recipesInProgress
+        && recipeTarget) {
+        const recipesId = Object.keys(recipesInProgress[recipeType]);
+        if (recipesId.includes(recipeTarget[0][idType])) {
+          setInProgress(true);
+        } else {
+          console.log(recipeTarget[0]);
+          setInProgress(false);
+        }
+      }
+    };
+    isRecipeInProgress();
+  }, [currRecipeData, isDrinkCateogry]);
+
   const { data, ingredients, currTarget, thumbKey, titleKey } = (currRecipeData);
 
   if (currTarget && thumbKey && titleKey) {
@@ -131,7 +153,7 @@ export default function RecipeDetail() {
           className="btn-start-recipe"
           disabled={ isDisabled }
         >
-          Start Recipe
+          {inProgress ? 'Continue Recipe' : 'Start recipe'}
         </button>
 
         <div>
