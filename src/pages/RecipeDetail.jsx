@@ -1,78 +1,55 @@
+import { bool } from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
+import useRecipes from '../hooks/useRecipes';
 import RecomendationCard from '../components/RecomendationCard';
+import FavoriteAndShare from '../components/FavoriteAndShare';
 
 export default function RecipeDetail() {
   const { pathname } = useLocation();
 
   const isDrinkCateogry = pathname.includes('drinks');
+  const currCategory = isDrinkCateogry ? 'drinks' : 'meals';
 
   const [currRecipeData, setCurrRecipeData] = useState({
     data: {},
     ingredients: [],
+    isDone: bool,
+    isInProgress: bool,
   });
+
+  const inProgressRecipes = {
+    meals: {
+      52771: [],
+    },
+    drinks: {
+      178319: [],
+    },
+  };
+  localStorage.setItem('inProgressRecipes', JSON.stringify(inProgressRecipes));
+
+  const { getIngredients } = useRecipes();
 
   const category = pathname.includes('drinks') ? 'thecocktaildb' : 'themealdb';
   const id = pathname.split('/')[2];
 
-  const [isDisabled, setIsDisabled] = useState(false);
-
-  const doneRecipeExemplo = [{
-    id: '52771',
-    type: 'meal',
-    nationality: 'Italian',
-    category: 'Vegetarian',
-    alcoholicOrNot: '',
-    name: 'Spicy Arrabiata Penne',
-    image: 'https://www.themealdb.com/images/media/meals/ustsqw1468250014.jpg',
-    doneDate: '',
-    tags: ['Pasta', 'Curry'],
-  }];
-  localStorage.setItem('doneRecipes', JSON.stringify(doneRecipeExemplo));
-
   useEffect(() => {
-    const teste = JSON.parse(localStorage.getItem('doneRecipes'));
-    const isRecipeDone = () => {
-      console.log('antes do if');
-      if (teste.length > 0) {
-        setIsDisabled(true);
-        console.log('depois do if');
-      }
-      console.log('retorno');
-    };
-    isRecipeDone();
-  }, []);
-
-  useEffect(() => {
-    const getIngredients = (data) => {
-      const ingredients = [];
-
-      const ingredientListLimit = 15;
-
-      for (let i = 1; i <= ingredientListLimit; i += 1) {
-        const currKeyTarget = `strIngredient${i}`;
-        const currMeisureKey = `strMeasure${i}`;
-        const currCategory = isDrinkCateogry ? 'drinks' : 'meals';
-        const ingredient = data[currCategory][0][currKeyTarget];
-        const meisure = data[currCategory][0][currMeisureKey];
-        const ingredientObj = {
-          [ingredient]: meisure,
-        };
-        if (ingredient) {
-          ingredients.push(ingredientObj);
-        }
-      }
-
-      return ingredients;
-    };
-
     const getRecipeDetail = async () => {
       const URL = `https://www.${category}.com/api/json/v1/1/lookup.php?i=${id}`;
       const data = await (await fetch(URL)).json();
-      const ingredients = getIngredients(data);
+      const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
+      const inProgress = JSON.parse(localStorage.getItem('inProgressRecipes'));
+      const idTarget = currCategory === 'meals' ? 'idMeal' : 'idDrink';
+      const ingredients = getIngredients(data[currCategory][0]);
+      const currRecipeId = data[currCategory][0][idTarget];
 
       setCurrRecipeData({
+        isDone: doneRecipes
+          ? doneRecipes.some((recipe) => recipe.id === currRecipeId) : false,
         data,
+        isInProgress: inProgress
+          ? Object.keys(inProgress[currCategory])
+            .some((recipeID) => recipeID === currRecipeId) : false,
         ingredients,
         thumbKey: isDrinkCateogry ? 'strDrinkThumb' : 'strMealThumb',
         titleKey: isDrinkCateogry ? 'strDrink' : 'strMeal',
@@ -80,9 +57,22 @@ export default function RecipeDetail() {
       });
     };
     getRecipeDetail();
-  }, [category, id, isDrinkCateogry]);
+  }, [
+    category,
+    id,
+    isDrinkCateogry,
+    currCategory,
+    getIngredients,
+  ]);
 
-  const { data, ingredients, currTarget, thumbKey, titleKey } = (currRecipeData);
+  const { data,
+    ingredients,
+    currTarget,
+    thumbKey,
+    titleKey,
+    isDone,
+    isInProgress,
+  } = (currRecipeData);
 
   if (currTarget && thumbKey && titleKey) {
     return (
@@ -99,15 +89,16 @@ export default function RecipeDetail() {
           ? <p data-testid="recipe-category">{data[currTarget][0].strCategory}</p>
           : <p data-testid="recipe-category">{data[currTarget][0].strAlcoholic}</p>}
 
+        <FavoriteAndShare />
         <ul>
           {ingredients.map((el, index) => {
-            const key = `${Object.keys(el)[0]}${Object.values(el)[0]}`;
+            const key = `${el.ingrediente}${el.medida}`;
             return (
               <li
                 key={ key }
                 data-testid={ `${index}-ingredient-name-and-measure` }
               >
-                {`${Object.keys(el)[0]} : ${Object.values(el)[0]} `}
+                {`${el.ingrediente}${el.medida}`}
               </li>
             );
           })}
@@ -125,14 +116,16 @@ export default function RecipeDetail() {
           allowFullScreen
           title="Embedded youtube"
         />}
-        <button
-          type="button"
-          data-testid="start-recipe-btn"
-          className="btn-start-recipe"
-          disabled={ isDisabled }
-        >
-          Start Recipe
-        </button>
+        {!isDone && (
+          <Link to={ `/${currCategory}/${id}/in-progress` }>
+            <button
+              type="button"
+              data-testid="start-recipe-btn"
+              className="btn-start-recipe"
+            >
+              { isInProgress ? 'Continue Recipe' : 'Start Recipe'}
+            </button>
+          </Link>)}
 
         <div>
           <RecomendationCard />
