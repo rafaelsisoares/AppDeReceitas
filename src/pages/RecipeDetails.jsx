@@ -5,7 +5,7 @@ import useRecipes from '../hooks/useRecipes';
 import RecomendationCard from '../components/RecomendationCard';
 import FavoriteAndShare from '../components/FavoriteAndShare';
 
-export default function RecipeDetail() {
+export default function RecipeDetails() {
   const { pathname } = useLocation();
 
   const isDrinkCateogry = pathname.includes('drinks');
