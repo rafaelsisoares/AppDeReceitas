@@ -1,4 +1,5 @@
 import { useState, useContext } from 'react';
+import { useLocation } from 'react-router-dom';
 import useRecipesContext from './useRecipesContext';
 import AppContext from '../context/AppContext';
 
@@ -6,6 +7,8 @@ const useRecipes = () => {
   const { recipesData, setRecipesData } = useContext(AppContext);
 
   const SEARCH_INITIAL_STATE = { searchBy: '', searchValue: '' };
+
+  const { pathname } = useLocation();
 
   const { reqApi } = useRecipesContext();
 
@@ -102,11 +105,21 @@ const useRecipes = () => {
     toggleFiltered(name);
   };
 
-  const handleCheckRecipeStep = ({ target: { value } }) => {
+  const handleCheckRecipeStep = (value, name) => {
+    const currCategory = pathname.includes('drinks') ? 'drinks' : 'meals';
+    const prevStorageValue = JSON.parse(localStorage.getItem('inProgressRecipes'));
     setCheckedSteps([
       ...checkedSteps,
       value,
     ]);
+    if (prevStorageValue[currCategory]) {
+      localStorage.setItem('inProgressRecipes', JSON.stringify({
+        ...prevStorageValue,
+        [currCategory]: {
+          ...prevStorageValue[currCategory],
+          [name]: [...checkedSteps, value],
+        } }));
+    }
   };
 
   return {
@@ -120,6 +133,7 @@ const useRecipes = () => {
     getIngredients,
     handleCheckRecipeStep,
     checkedSteps,
+    setCheckedSteps,
   };
 };
 

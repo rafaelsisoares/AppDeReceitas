@@ -18,16 +18,6 @@ export default function RecipeDetails() {
     isInProgress: bool,
   });
 
-  const inProgressRecipes = {
-    meals: {
-      52771: [],
-    },
-    drinks: {
-      178319: [],
-    },
-  };
-  localStorage.setItem('inProgressRecipes', JSON.stringify(inProgressRecipes));
-
   const { getIngredients } = useRecipes();
 
   const category = pathname.includes('drinks') ? 'thecocktaildb' : 'themealdb';
