@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Redirect, useLocation } from 'react-router-dom';
+
 import RecomendationCard from '../components/RecomendationCard';
+import shareIcon from '../images/shareIcon.svg';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 
 export default function RecipeDetail() {
   const { pathname } = useLocation();
@@ -11,11 +14,12 @@ export default function RecipeDetail() {
     data: {},
     ingredients: [],
   });
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [inProgress, setInProgress] = useState(false);
+  const [redirect, setRedirect] = useState('');
 
   const category = pathname.includes('drinks') ? 'thecocktaildb' : 'themealdb';
   const id = pathname.split('/')[2];
-
-  const [isDisabled, setIsDisabled] = useState(false);
 
   const doneRecipeExemplo = [{
     id: '52771',
@@ -82,8 +86,30 @@ export default function RecipeDetail() {
     getRecipeDetail();
   }, [category, id, isDrinkCateogry]);
 
+  useEffect(() => {
+    const isRecipeInProgress = () => {
+      const { data } = currRecipeData;
+      const recipesInProgress = JSON.parse(localStorage.getItem('inProgressRecipes'));
+      const recipeType = isDrinkCateogry ? 'drinks' : 'meals';
+      const idType = isDrinkCateogry ? 'idDrink' : 'idMeal';
+      const recipeTarget = data[recipeType];
+      if (recipesInProgress
+        && recipeTarget) {
+        const recipesId = Object.keys(recipesInProgress[recipeType]);
+        if (recipesId.includes(recipeTarget[0][idType])) {
+          setInProgress(true);
+        } else {
+          console.log(recipeTarget[0]);
+          setInProgress(false);
+        }
+      }
+    };
+    isRecipeInProgress();
+  }, [currRecipeData, isDrinkCateogry]);
+
   const { data, ingredients, currTarget, thumbKey, titleKey } = (currRecipeData);
 
+  if (redirect) return (<Redirect to={ redirect } />);
   if (currTarget && thumbKey && titleKey) {
     return (
       <div>
@@ -129,9 +155,17 @@ export default function RecipeDetail() {
           type="button"
           data-testid="start-recipe-btn"
           className="btn-start-recipe"
-          disabled={ isDisabled }
+          disabled={ !isDisabled }
+          onClick={ () => setRedirect(`${pathname}/in-progress`) }
         >
-          Start Recipe
+          {inProgress ? 'Continue Recipe' : 'Start recipe'}
+        </button>
+
+        <button type="button" data-testid="share-btn">
+          <img src={ shareIcon } alt="share" />
+        </button>
+        <button type="button" data-testid="favorite-btn">
+          <img src={ whiteHeartIcon } alt="favorite" />
         </button>
 
         <div>
