@@ -6,28 +6,45 @@ import useRecipes from '../hooks/useRecipes';
 
 export default function RecipeInProgress() {
   const { pathname } = useLocation();
-  const { getIngredients, handleCheckRecipeStep, checkedSteps } = useRecipes();
   const [currRecipeData, setCurrRecipeData] = useState({});
   const [currRecipeSteps, setCurrRecipeSteps] = useState([]);
   const { contentValue: { recipesData } } = useRecipesContext();
+  const { getIngredients,
+    handleCheckRecipeStep,
+    checkedSteps,
+    setCheckedSteps,
+  } = useRecipes();
 
   const thumbKeyName = pathname.includes('drinks') ? 'strDrinkThumb' : 'strMealThumb';
   const titleKeyName = pathname.includes('drinks') ? 'strDrink' : 'strMeal';
   const currCategory = pathname.includes('drinks') ? 'drinks' : 'meals';
+
+  const currentId = pathname.split('/')[2];
 
   useEffect(() => {
     const getRecipeData = async () => {
       const id = pathname.split('/')[2];
       const currApiProvider = pathname.includes('drinks') ? 'thecocktaildb' : 'themealdb';
       const endpoint = `https://www.${currApiProvider}.com/api/json/v1/1/lookup.php?i=${id}`;
+      const checkedStepsData = JSON.parse(localStorage.getItem('inProgressRecipes'));
       const data = await (await fetch(endpoint)).json();
       const ingredients = getIngredients(data[currCategory][0]);
       setCurrRecipeSteps([...ingredients]);
       setCurrRecipeData(data);
+      if (checkedStepsData[currCategory][id]) {
+        return setCheckedSteps([...checkedStepsData[currCategory][id]]);
+      }
+      setCheckedSteps([]);
     };
 
     getRecipeData();
-  }, [pathname, recipesData, currCategory, getIngredients]);
+  }, [pathname,
+    recipesData,
+    currCategory,
+    getIngredients,
+    checkedSteps,
+    setCheckedSteps,
+  ]);
 
   if ((currRecipeData[currCategory])) {
     return (
@@ -62,16 +79,24 @@ export default function RecipeInProgress() {
                  >
                    <label
                      data-testid={ `${index}-ingredient-step` }
-                     className={ checkedSteps.includes(
-                       `${step.ingrediente}: ${step.medida}`,
-                     ) ? 'checked-step' : '' }
+                     className={ checkedSteps
+                        && checkedSteps.includes(`${step.ingrediente}: ${step.medida}`)
+                       ? 'checked-step' : '' }
                      htmlFor="step"
                    >
                      <input
                        className="step-checkbox"
                        type="checkbox"
-                       onChange={ handleCheckRecipeStep }
-                       name="step"
+                       name={ currentId }
+                       checked={ checkedSteps
+                         ? checkedSteps.includes(`${step.ingrediente}: ${step.medida}`)
+                         : false }
+                       onChange={ () => {
+                         handleCheckRecipeStep(
+                           `${step.ingrediente}: ${step.medida}`,
+                           currentId,
+                         );
+                       } }
                        value={ `${step.ingrediente}: ${step.medida}` }
                        id="step"
                      />

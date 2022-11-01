@@ -13,6 +13,13 @@ import AppProvider from './context/AppProvider';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
+  const hasData = JSON.parse(localStorage.getItem('inProgressRecipes'));
+  if (!hasData) {
+    localStorage.setItem('inProgressRecipes', JSON.stringify({
+      meals: {},
+      drinks: {},
+    }));
+  }
   return (
     <AppProvider>
       <BrowserRouter>
