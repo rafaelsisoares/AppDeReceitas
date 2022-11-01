@@ -133,3 +133,23 @@ iframe {
   bottom: 0;
   position: fixed;
 }
+
+.recipe-steps {
+  background-color: rgb(242, 242, 251);
+  list-style: none;
+  padding: 0.5rem;
+}
+
+.step {
+  font-size: 14px;
+  margin: 0;
+  padding: 0;
+}
+
+.step-checkbox {
+  margin: 0 0.5rem 0 0;
+}
+
+.checked-step {
+  text-decoration: line-through solid black;
+}

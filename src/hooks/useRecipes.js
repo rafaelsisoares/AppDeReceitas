@@ -3,7 +3,6 @@ import useRecipesContext from './useRecipesContext';
 import AppContext from '../context/AppContext';
 
 const useRecipes = () => {
-  console.log(useContext(AppContext));
   const { recipesData, setRecipesData } = useContext(AppContext);
 
   const SEARCH_INITIAL_STATE = { searchBy: '', searchValue: '' };
@@ -11,6 +10,7 @@ const useRecipes = () => {
   const { reqApi } = useRecipesContext();
 
   const [isFiltered, toggleFiltered] = useState('');
+  const [checkedSteps, setCheckedSteps] = useState([]);
 
   const [searchOptions, setSearchOptions] = useState(SEARCH_INITIAL_STATE);
 
@@ -35,7 +35,6 @@ const useRecipes = () => {
     const { searchOpt, searchFilter, searchValue, apiAddres } = treatEndpoint(category);
     const endpoint = `https://www.${apiAddres}.com/api/json/v1/1/${searchOpt}.php?${searchFilter}=${searchValue}`;
     const data = await (await fetch(endpoint)).json();
-    console.log(endpoint);
     const currTarget = apiAddres === 'thecocktaildb' ? 'drinks' : 'meals';
 
     if (!data[currTarget]) {
@@ -46,6 +45,19 @@ const useRecipes = () => {
       ...recipesData,
       [currTarget]: data[currTarget],
     });
+  };
+
+  const getIngredients = (data) => {
+    const chaves = Object.keys(data).filter((key) => key.includes('Ingredient'));
+    const ingredientes = chaves.map((key) => data[key]).filter((e) => e);
+    const chavesMedicoes = Object.keys(data).filter((key) => key.includes('Measure'));
+    const medicoes = chavesMedicoes.map((key) => data[key]).filter((e) => e);
+
+    const ingredientesComMedicoes = ingredientes.map((ingrediente, index) => ({
+      ingrediente,
+      medida: medicoes[index],
+    }));
+    return ingredientesComMedicoes;
   };
 
   const handleOnInputChange = ({ target: { value } }) => {
@@ -90,6 +102,13 @@ const useRecipes = () => {
     toggleFiltered(name);
   };
 
+  const handleCheckRecipeStep = ({ target: { value } }) => {
+    setCheckedSteps([
+      ...checkedSteps,
+      value,
+    ]);
+  };
+
   return {
     handleInputSearch,
     handleOnInputChange,
@@ -98,6 +117,9 @@ const useRecipes = () => {
     handleFilter,
     handleRemoveFilter,
     isFiltered,
+    getIngredients,
+    handleCheckRecipeStep,
+    checkedSteps,
   };
 };
 

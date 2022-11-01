@@ -12,7 +12,6 @@ export default function RecomendationCard() {
       const category = isDrinkCategory ? 'themealdb' : 'thecocktaildb';
       const endpoint = `https://www.${category}.com/api/json/v1/1/search.php?s=`;
       const data = await (await fetch(endpoint)).json();
-      console.log(data);
       if (data) {
         setRecomendations(data);
       }
@@ -22,8 +21,6 @@ export default function RecomendationCard() {
   }, [currCategory, isDrinkCategory]);
 
   if (Object.keys(recomendations).length > 0) {
-    console.log(currCategory);
-    console.log(recomendations[currCategory][0].idDrink);
     return (
       <div className="recommendations-container">
         {

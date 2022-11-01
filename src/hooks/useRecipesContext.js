@@ -30,8 +30,6 @@ const useRecipesContext = () => {
         categories: drinksCategories,
       } = await reqApi('thecocktaildb');
 
-      console.log(meals);
-      console.log(drinks);
       setRecipesData({
         meals: meals.meals,
         mealsCategories: mealsCategories.meals,
